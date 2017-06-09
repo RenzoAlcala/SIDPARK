@@ -31,8 +31,8 @@ public abstract class InferenciaBorrosa {
 
     public abstract void cargarOperadores();
     public abstract void cargarReglas();
-    public abstract Object implicacion(Map<String,Double> resultadoReglas);
-    public abstract Object inferencia(Map<String,String> entradasDifusas,Map<String,Double> salidas);
+    public abstract Object agregacion(Map<String,Double> resultadoReglas);
+    public abstract Object inferencia(Map<String,Double> entradasDifusas,Map<String,Double> salidas);
 
 
 }

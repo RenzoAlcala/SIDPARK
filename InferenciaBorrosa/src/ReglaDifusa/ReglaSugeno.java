@@ -31,7 +31,7 @@ public class ReglaSugeno extends Regla {
     }
     
     @Override
-    public Object evaluar(Map<String,String> entradasDifusa,Map<String, Double> salidasDifusas){
+    public Object evaluar(Map<String,Double> entradasDifusa,Map<String, Double> salidasDifusas){
         try{
             String expresion = getExpr();
             String[] valoresExpr = expresion.split("=>");
@@ -50,7 +50,7 @@ public class ReglaSugeno extends Regla {
         return null;
     }
     
-    private String evaluarAntecedente(Map<String,String> entradasDifusa, String expr) {
+    private String evaluarAntecedente(Map<String,Double> entradasDifusa, String expr) {
         try{
             String valDifuso;
             if ((valDifuso=obtenerValorDifuso(entradasDifusa,expr.trim()))!=null) {
@@ -93,12 +93,12 @@ public class ReglaSugeno extends Regla {
                     if(esDouble(valIzq.replaceAll(" ", ""))){
                         valDifIzq = valIzq.replaceAll(" ", "");
                     }else{
-                        valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""));
+                        valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""))+"";
                     }
                     if(esDouble(valDer.replaceAll(" ", ""))){
                         valDifDer = valDer.replaceAll(" ", "");
                     }else{
-                        valDifDer = entradasDifusa.get(valDer.replaceAll(" ", ""));
+                        valDifDer = entradasDifusa.get(valDer.replaceAll(" ", ""))+"";
                     }
                     
                     //String valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""));
@@ -114,9 +114,9 @@ public class ReglaSugeno extends Regla {
 
     }
     
-    private String obtenerValorDifuso(Map<String,String> entradasDifusa,String expr){
+    private String obtenerValorDifuso(Map<String,Double> entradasDifusa,String expr){
         String exprLimpio = expr.replaceAll(" ", "");
-        return entradasDifusa.get(exprLimpio);
+        return (entradasDifusa.get(exprLimpio)==null)?null:entradasDifusa.get(exprLimpio)+"";
     }
     
     private boolean esDouble(String valor){
@@ -149,13 +149,13 @@ public class ReglaSugeno extends Regla {
         operadoresFunciones.put("OR", "OperadorOR");
         ReglaSugeno rs = new ReglaSugeno(listaOperadores,operadoresFunciones);
         rs.setExpr("Vel ==Bajo AND AccX== Alto AND AccX   ==   Bajo => Pel == Alto");
-        Map<String, String> entradasDifusas = new HashMap();
-        entradasDifusas.put("Vel==Bajo", "0.1");
-        entradasDifusas.put("Vel==Alto", "0.2");
-        entradasDifusas.put("Vel==Medio", "0.3");
-        entradasDifusas.put("AccX==Alto", "0.4");
-        entradasDifusas.put("AccX==Bajo", "0.5");
-        entradasDifusas.put("AccX==Medio", "0.6");
+        Map<String, Double> entradasDifusas = new HashMap();
+        entradasDifusas.put("Vel==Bajo", 0.1d);
+        entradasDifusas.put("Vel==Alto", 0.2d);
+        entradasDifusas.put("Vel==Medio", 0.3d);
+        entradasDifusas.put("AccX==Alto", 0.4d);
+        entradasDifusas.put("AccX==Bajo", 0.5d);
+        entradasDifusas.put("AccX==Medio", 0.6d);
         Map<String, Double> salidas = new HashMap();
         salidas.put("Pel==Alto", 1d);
         Object res = rs.evaluar(entradasDifusas,salidas);

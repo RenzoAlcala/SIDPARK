@@ -5,6 +5,7 @@
  */
 package sib;
 
+import Inferencia.InferenciaBorrosaSugeno;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +16,11 @@ import java.util.Map;
 public class SistemaInferenciaBorrosa {
 
     
-    public static Map<String,Double> procesamientoDifuso(Map<String,Double> entradasCrisp){
+    public static Map<String,Double> procesamientoDifuso(Map<String,Double> entradasCrisp,Map<String,Double> salidaCrisp){
         BorrosificadorDifuso.EvaluadorDifuso ed = new BorrosificadorDifuso.EvaluadorDifuso();
         Map<String,Double> borrosificados = ed.borrosificarEntradas(entradasCrisp);
+        InferenciaBorrosaSugeno ibs = new InferenciaBorrosaSugeno();
+        ibs.inferencia(borrosificados, salidaCrisp);
         return borrosificados;
         
     }
@@ -30,6 +33,6 @@ public class SistemaInferenciaBorrosa {
         entradasCrisp.put("Vel", 1d);
         Map<String, Double> salidaCrisp = new HashMap();
         entradasCrisp.put("Pel", 1d);
-        SistemaInferenciaBorrosa.procesamientoDifuso(entradasCrisp);
+        SistemaInferenciaBorrosa.procesamientoDifuso(entradasCrisp,salidaCrisp);
     }
 }

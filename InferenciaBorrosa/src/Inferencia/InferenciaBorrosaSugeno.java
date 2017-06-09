@@ -6,6 +6,7 @@
 package Inferencia;
 
 import BorrosificadorDifuso.EvaluadorDifuso;
+import OperadorDifuso.Operador;
 import ReglaDifusa.Regla;
 import ReglaDifusa.ReglaSugeno;
 import java.io.BufferedReader;
@@ -28,7 +29,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
     }
     
     @Override
-    public Object inferencia(Map<String,String> entradasDifusas,Map<String,Double> salidas) {
+    public Object inferencia(Map<String,Double> entradasDifusas,Map<String,Double> salidas) {
         Map<String,Double> salidasDif = new HashMap<String,Double>();
         for (Regla regla : listaReglas) {
             double resultadoDif = (Double)regla.evaluar(entradasDifusas, salidas);
@@ -36,18 +37,33 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
             salidasDif.put(exprSalida, resultadoDif);
         }
         
-        
+        Object o = agregacion(salidasDif);
         
         return null;
     }
     
     @Override
-    public Object implicacion(Map<String,Double> resultadoReglas){
-        
-        for (Map.Entry<String,Double> resultado: resultadoReglas.entrySet()) {
-            resultado.
+    public Object agregacion(Map<String,Double> resultadoReglas){
+        Map<String,Double> agregacionReglas = new HashMap();
+        try{
+            for (Map.Entry<String,Double> resultado1: resultadoReglas.entrySet()) {
+                if(agregacionReglas.containsKey(resultado1.getKey())){
+                    agregacionReglas.put(resultado1.getKey(),resultado1.getValue());
+                }else{
+                    Double val = agregacionReglas.get(resultado1.getKey());
+                    String keyAgregacion = "AGREGACION";
+                    String claseAgregacion = operadoresFunciones.get(keyAgregacion);
+                    Operador op = (Operador) Class.forName("OperadorDifuso."+claseAgregacion).newInstance();
+                    agregacionReglas.put(resultado1.getKey(), op.calcular(val,resultado1.getValue()));
+                }
+            }
+        }catch(Exception e){
+            System.out.println("ERROR InferenciaBorrosa.agregacion: agregacion");
+            e.printStackTrace();
+            return null;
         }
         
+        return agregacionReglas;
     }
 
     
@@ -79,7 +95,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
             System.out.println("");
             
         } catch (Exception e) {
-            System.out.println("ERROR InferenciaBorrosa.cargarOperadores: Ocurrio un error al intentar leer el archivo de operadores");
+            System.out.println("ERROR InferenciaBorrosa.cargarReglas: Ocurrio un error al intentar leer el archivo de operadores");
             e.printStackTrace();
         } finally {
             // En el finally cerramos el fichero, para asegurarnos
@@ -90,7 +106,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
                     fr.close();
                 }
             } catch (Exception e2) {
-                System.out.println("ERROR InferenciaBorrosa.cargarOperadores: Ocurrio un error al intentar cerrar la conexion del archivo");
+                System.out.println("ERROR InferenciaBorrosa.cargarReglas: Ocurrio un error al intentar cerrar la conexion del archivo");
                 e2.printStackTrace();
             }
         }
