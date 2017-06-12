@@ -33,7 +33,7 @@ public abstract class Regla {
     }
     
     
-    public abstract Object evaluar(Map<String,Double> entradasDifusa,Map<String, Double> salidasDifusasa);
+     public abstract Object evaluar(Map<String,Double> entradasDifusa,Map<String, Double> salidasDifusasa);
     
     
 }

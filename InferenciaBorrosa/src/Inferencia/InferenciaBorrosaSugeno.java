@@ -6,7 +6,8 @@
 package Inferencia;
 
 import BorrosificadorDifuso.EvaluadorDifuso;
-import OperadorDifuso.Operador;
+import OperadorDifuso.DefineOperador;
+import OperadorDifuso.OperadorFuncion;
 import ReglaDifusa.Regla;
 import ReglaDifusa.ReglaSugeno;
 import java.io.BufferedReader;
@@ -30,31 +31,61 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
     
     @Override
     public Object inferencia(Map<String,Double> entradasDifusas,Map<String,Double> salidas) {
-        Map<String,Double> salidasDif = new HashMap<String,Double>();
-        for (Regla regla : listaReglas) {
-            double resultadoDif = (Double)regla.evaluar(entradasDifusas, salidas);
-            String exprSalida = ((ReglaSugeno)regla).obtenerConsecuente();
-            salidasDif.put(exprSalida, resultadoDif);
+        
+        double resultadoFinal = 0;
+        //SE ENCUENTRAN LOS VALORES DIFUSOS DE CADA REGLA
+        try{
+            Map<String,Double> salidasDif = new HashMap<>();
+            for (Regla regla : listaReglas) {
+                double resultadoDif = (Double)regla.evaluar(entradasDifusas, salidas);
+                String exprSalida = ((ReglaSugeno)regla).obtenerConsecuente();
+                if(salidasDif.containsKey(exprSalida)){
+                    salidasDif.put(exprSalida, OperadorFuncion.calcular(listaOperadores.get(DefineOperador.K_AGREGACION),(double)salidasDif.get(exprSalida),resultadoDif));
+                }else{
+                    salidasDif.put(exprSalida, resultadoDif);
+                }
+            }
+
+            //SE REALIZA LA AGREGACION DE LAS SALIDAS (MAX)
+            //Map<String,Double> agregacionReglas = (Map<String,Double>)agregacion(salidasDif);
+
+            //
+            double denominador = 0;
+
+            for (Map.Entry<String,Double> reglaDif: salidasDif.entrySet()) {
+                String reglaKey = reglaDif.getKey();
+                double valorDisparo = reglaDif.getValue();
+                if(salidas.get(reglaKey)==null){
+                    throw new Exception("InferenciaBorrosaSugena.inferencia: Error no se encontro valor de salida de la regla");
+                }
+                //double valorSalida = salidas.get(reglaKey);
+                //resultadoFinal += valorSalida*valorDisparo;
+                resultadoFinal += valorDisparo;
+                denominador += salidas.get(reglaKey);
+
+            }
+            resultadoFinal /= (denominador);
+        }catch(Exception e){
+            System.out.println("ERROR InferenciaBorrosaSugena.inferencia: "+e.getMessage());
+            e.printStackTrace();
         }
         
-        Object o = agregacion(salidasDif);
-        
-        return null;
+        return resultadoFinal;
     }
-    
+    /*
     @Override
-    public Object agregacion(Map<String,Double> resultadoReglas){
+    public Object agregacion(Map<String,Object> resultadoReglas){
         Map<String,Double> agregacionReglas = new HashMap();
         try{
-            for (Map.Entry<String,Double> resultado1: resultadoReglas.entrySet()) {
+            for (Map.Entry<String,Object> resultado1: resultadoReglas.entrySet()) {
                 if(agregacionReglas.containsKey(resultado1.getKey())){
-                    agregacionReglas.put(resultado1.getKey(),resultado1.getValue());
+                    agregacionReglas.put(resultado1.getKey(),(Double)resultado1.getValue());
                 }else{
                     Double val = agregacionReglas.get(resultado1.getKey());
                     String keyAgregacion = "AGREGACION";
                     String claseAgregacion = operadoresFunciones.get(keyAgregacion);
                     Operador op = (Operador) Class.forName("OperadorDifuso."+claseAgregacion).newInstance();
-                    agregacionReglas.put(resultado1.getKey(), op.calcular(val,resultado1.getValue()));
+                    agregacionReglas.put(resultado1.getKey(), op.calcular(val,(Double)resultado1.getValue()));
                 }
             }
         }catch(Exception e){
@@ -65,7 +96,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
         
         return agregacionReglas;
     }
-
+*/
     
     @Override
     public void cargarReglas() {
@@ -85,7 +116,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
             Regla regla;
             int i=0;
             while ((linea = br.readLine()) != null) {
-                regla = new ReglaSugeno(listaOperadores,operadoresFunciones);
+                regla = new ReglaSugeno(listaOperadores);
                 regla.setExpr(linea);
                 regla.setId(i);
                 listaReglas.add(regla);
@@ -117,8 +148,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
         File archivo = null;
         FileReader fr = null;
         BufferedReader br = null;
-        operadoresFunciones = new HashMap(); 
-        listaOperadores = new ArrayList();
+        listaOperadores = new HashMap();
         try {
             // Apertura del fichero y creacion de BufferedReader para poder
             // hacer una lectura comoda (disponer del metodo readLine()).
@@ -129,8 +159,7 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
             // Lectura del fichero
             String linea;
             while ((linea = br.readLine()) != null) {
-                operadoresFunciones.put(linea.split(",")[0], linea.split(",")[1]);
-                listaOperadores.add(linea.split(",")[0]);
+                listaOperadores.put(linea.split(",")[0], linea.split(",")[1]);
             }
             
             
@@ -157,21 +186,20 @@ public class InferenciaBorrosaSugeno extends InferenciaBorrosa {
         InferenciaBorrosaSugeno ed = new InferenciaBorrosaSugeno();
         ReglaSugeno re = (ReglaSugeno)ed.listaReglas.get(0);
         
-        ArrayList<String> listaOperadores = new ArrayList();
-        listaOperadores.add("AND");
-        listaOperadores.add("OR");
-        Map<String, String> operadoresFunciones = new HashMap();
-        operadoresFunciones.put("AND", "OperadorAND");
-        operadoresFunciones.put("OR", "OperadorOR");
-        ReglaSugeno rs = new ReglaSugeno(listaOperadores,operadoresFunciones);
+        Map<String,String> listaOperadores = new HashMap();
+        listaOperadores.put("AND","MIN");
+        listaOperadores.put("OR","MAX");
+        listaOperadores.put("AGREGACION","MAX");
+        listaOperadores.put("IMPLICACION","MIN");
+        ReglaSugeno rs = new ReglaSugeno(listaOperadores);
         rs.setExpr("Vel ==Bajo AND AccX== Alto AND AccX   ==   Bajo => Pel == Alto");
-        Map<String, String> entradasDifusas = new HashMap();
-        entradasDifusas.put("Vel==Bajo", "0.1");
-        entradasDifusas.put("Vel==Alto", "0.2");
-        entradasDifusas.put("Vel==Medio", "0.3");
-        entradasDifusas.put("AccX==Alto", "0.4");
-        entradasDifusas.put("AccX==Bajo", "0.5");
-        entradasDifusas.put("AccX==Medio", "0.6");
+        Map<String, Double> entradasDifusas = new HashMap();
+        entradasDifusas.put("Vel==Bajo", 0.1d);
+        entradasDifusas.put("Vel==Alto", 0.2d);
+        entradasDifusas.put("Vel==Medio", 0.3d);
+        entradasDifusas.put("AccX==Alto", 0.4d);
+        entradasDifusas.put("AccX==Bajo", 0.5d);
+        entradasDifusas.put("AccX==Medio", 0.6d);
         Map<String, Double> salidas = new HashMap();
         salidas.put("Pel==Alto", 1d);
         System.out.println(re.evaluar(entradasDifusas, salidas));

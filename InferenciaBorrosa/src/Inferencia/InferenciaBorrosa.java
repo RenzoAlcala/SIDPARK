@@ -25,13 +25,12 @@ import java.util.logging.Logger;
 public abstract class InferenciaBorrosa {
 
     static String expr = "1 AND 2 OR 3  ";
-    protected ArrayList<String> listaOperadores;
-    protected Map<String,String> operadoresFunciones;
+    protected Map<String,String> listaOperadores;
     protected ArrayList<Regla> listaReglas;
 
     public abstract void cargarOperadores();
     public abstract void cargarReglas();
-    public abstract Object agregacion(Map<String,Double> resultadoReglas);
+    //public abstract Object agregacion(Map<String,Object> resultadoReglas);
     public abstract Object inferencia(Map<String,Double> entradasDifusas,Map<String,Double> salidas);
 
 

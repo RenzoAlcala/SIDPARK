@@ -5,7 +5,8 @@
  */
 package ReglaDifusa;
 
-import OperadorDifuso.Operador;
+import OperadorDifuso.DefineOperador;
+import OperadorDifuso.OperadorFuncion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,17 +17,15 @@ import java.util.Map;
  */
 public class ReglaSugeno extends Regla {
     
-    private ArrayList<String> listaOperadores;
-    private Map<String, String> operadoresFunciones;
+    private Map<String, String> listaOperadores;
     
-    public ReglaSugeno(ArrayList<String> listaOperadores, Map<String, String> operadoresFunciones){
+    public ReglaSugeno(Map<String, String> listaOperadores){
         this.listaOperadores = listaOperadores;
-        this.operadoresFunciones = operadoresFunciones;
     }
     
     private Double evaluarConsecuente(String exprConsecuente,Double valorDisparoRegla,Map<String, Double> salidasDifusas){
         //SE DEBE DEFINIR UNA FUNCION PARA MODELAR LA SALIDA
-        return valorDisparoRegla*salidasDifusas.get(exprConsecuente.replaceAll(" ", ""));
+        return OperadorFuncion.calcular(listaOperadores.get(DefineOperador.K_IMPLICACION),valorDisparoRegla,salidasDifusas.get(exprConsecuente.replaceAll(" ", "")));
         
     }
     
@@ -42,6 +41,7 @@ public class ReglaSugeno extends Regla {
             String exprConsecuente = valoresExpr[1];
             double valorDisparo =  Double.parseDouble(evaluarAntecedente(entradasDifusa,exprAntecedente));
             return evaluarConsecuente(exprConsecuente,valorDisparo,salidasDifusas);
+            //return valorDisparo;
         }catch(Exception e){
             System.out.println("ERROR ReglaSugeno.evaluar: "+e.getMessage());
             e.printStackTrace();
@@ -59,11 +59,11 @@ public class ReglaSugeno extends Regla {
 
             int indMinOp = Integer.MAX_VALUE;
             String operador = "";
-            for (String oper : listaOperadores) {
-                int index = expr.indexOf(oper);
+            for (Map.Entry<String,String> operadorFunc: listaOperadores.entrySet()) {
+                int index = expr.indexOf(operadorFunc.getKey());
                 if (index != -1 && indMinOp > index) {
                     indMinOp = index;
-                    operador = oper;
+                    operador = operadorFunc.getValue();
                 }
             }
             if (indMinOp == -1) {
@@ -71,8 +71,8 @@ public class ReglaSugeno extends Regla {
             }
             String miembroIzq = expr.substring(0, indMinOp);
             String miembroDer = expr.substring(indMinOp + operador.length(), expr.length());
-            String valIzq = "";
-            String valDer = "";
+            String valIzq;
+            String valDer;
             if (hayOperador(miembroIzq)) {
                 valIzq = evaluarAntecedente(entradasDifusa,miembroIzq);
             } else {
@@ -84,28 +84,24 @@ public class ReglaSugeno extends Regla {
                 valDer = miembroDer;
             }
 
-            for (String oper : listaOperadores) {
-                if (operador.equals(oper)) {
-                    String claseOp = operadoresFunciones.get(oper);
-                    Operador op = (Operador) Class.forName("OperadorDifuso."+claseOp).newInstance();
-                    String valDifIzq;
-                    String valDifDer;
-                    if(esDouble(valIzq.replaceAll(" ", ""))){
-                        valDifIzq = valIzq.replaceAll(" ", "");
-                    }else{
-                        valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""))+"";
-                    }
-                    if(esDouble(valDer.replaceAll(" ", ""))){
-                        valDifDer = valDer.replaceAll(" ", "");
-                    }else{
-                        valDifDer = entradasDifusa.get(valDer.replaceAll(" ", ""))+"";
-                    }
-                    
-                    //String valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""));
-                    //String valDifDer = entradasDifusa.get(valDer.replaceAll(" ", ""));
-                    return ""+op.calcular(Double.parseDouble(valDifIzq), Double.parseDouble(valDifDer));
-                }
+            //for (String oper : listaOperadores) {
+            //    if (operador.equals(oper)) {
+            String valDifIzq;
+            String valDifDer;
+            if(esDouble(valIzq.replaceAll(" ", ""))){
+                valDifIzq = valIzq.replaceAll(" ", "");
+            }else{
+                valDifIzq = entradasDifusa.get(valIzq.replaceAll(" ", ""))+"";
             }
+            if(esDouble(valDer.replaceAll(" ", ""))){
+                valDifDer = valDer.replaceAll(" ", "");
+            }else{
+                valDifDer = entradasDifusa.get(valDer.replaceAll(" ", ""))+"";
+            }
+
+            return ""+OperadorFuncion.calcular(operador,Double.parseDouble(valDifIzq), Double.parseDouble(valDifDer));
+            //    }
+            //}
         }catch(Exception e){
             System.out.println("ERROR ReglaDifusa.ReglaSugeno: "+e.getMessage());
             e.printStackTrace();
@@ -132,8 +128,8 @@ public class ReglaSugeno extends Regla {
     }
     
     private  boolean hayOperador(String expresion) {
-        for (String operador : listaOperadores) {
-            if (expresion.contains(operador)) {
+        for (Map.Entry<String,String> operadorFunc: listaOperadores.entrySet()) {
+            if (expresion.contains(operadorFunc.getKey())) {
                 return true;
             }
         }
@@ -141,13 +137,13 @@ public class ReglaSugeno extends Regla {
     }
  
     public static void main(String[] args) {
-        ArrayList<String> listaOperadores = new ArrayList();
-        listaOperadores.add("AND");
-        listaOperadores.add("OR");
+
         Map<String, String> operadoresFunciones = new HashMap();
-        operadoresFunciones.put("AND", "OperadorAND");
-        operadoresFunciones.put("OR", "OperadorOR");
-        ReglaSugeno rs = new ReglaSugeno(listaOperadores,operadoresFunciones);
+        operadoresFunciones.put("AND", "MIN");
+        operadoresFunciones.put("OR", "MAX");
+        operadoresFunciones.put("IMPLICACION", "PROD");
+        operadoresFunciones.put("AGREGACION", "MAX");
+        ReglaSugeno rs = new ReglaSugeno(operadoresFunciones);
         rs.setExpr("Vel ==Bajo AND AccX== Alto AND AccX   ==   Bajo => Pel == Alto");
         Map<String, Double> entradasDifusas = new HashMap();
         entradasDifusas.put("Vel==Bajo", 0.1d);

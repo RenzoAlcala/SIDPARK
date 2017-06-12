@@ -16,12 +16,12 @@ import java.util.Map;
 public class SistemaInferenciaBorrosa {
 
     
-    public static Map<String,Double> procesamientoDifuso(Map<String,Double> entradasCrisp,Map<String,Double> salidaCrisp){
+    public static double procesamientoDifuso(Map<String,Double> entradasCrisp,Map<String,Double> salidaCrisp){
         BorrosificadorDifuso.EvaluadorDifuso ed = new BorrosificadorDifuso.EvaluadorDifuso();
         Map<String,Double> borrosificados = ed.borrosificarEntradas(entradasCrisp);
         InferenciaBorrosaSugeno ibs = new InferenciaBorrosaSugeno();
-        ibs.inferencia(borrosificados, salidaCrisp);
-        return borrosificados;
+        double peligrosidad = (Double)ibs.inferencia(borrosificados, salidaCrisp);
+        return peligrosidad;
         
     }
     
@@ -32,7 +32,7 @@ public class SistemaInferenciaBorrosa {
         entradasCrisp.put("AccZ", 1d);
         entradasCrisp.put("Vel", 1d);
         Map<String, Double> salidaCrisp = new HashMap();
-        entradasCrisp.put("Pel", 1d);
+        salidaCrisp.put("Pel==Alto", 1d);
         SistemaInferenciaBorrosa.procesamientoDifuso(entradasCrisp,salidaCrisp);
     }
 }
