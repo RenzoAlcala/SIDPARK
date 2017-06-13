@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            @media only screen and (min-width: 500px) {
+                .panel-flotante{
+                    width:30%;
+                    max-width: 400px;
+                }
+                
+            }
+            .panel-flotante{
+                z-index:1;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            /*
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -1px;
+            }*/
+            
+            #menuPrincipal{
+                top:10px;
+                left:10px;
+                
+            }
+            .dropdown-submenu{position:relative;}
+            .dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+            .dropdown-submenu:hover>.dropdown-menu{display:block;}
+            .dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+            .dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+            .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+        </style>
+    </head>
+    <body>
+        <script>
+            
+            function cerrarPopup(nombre){
+                document.getElementById(nombre).style.display = "none";
+            }
+            function abrirPopup(nombre){
+                cerrarAllPopup();
+                document.getElementById(nombre).style.display = "block";
+            }
+            
+            function cerrarAllPopup(){
+                document.getElementById('panelBuscarTracking').style.display = "none";
+                document.getElementById('panelBuscarTrackingFecha').style.display = "none";
+            }
+            
+            /*
+            $(document).ready(function(){
+                $('.dropdown-submenu a.test').on("click", function(e){
+                  $(this).next('ul').toggle();
+                  e.stopPropagation();
+                  e.preventDefault();
+                });
+              });*/
+        </script>
+                <div id="mapa" style="z-index:-1;position:fixed;top:0px;left:0px;background-color:#cccccc;width:100%;height:100%"></div>
+
+        <div id="menuPrincipal" class="btn-group" >
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style=" position: static; margin-bottom: 5px; *width: 180px;">
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Tracking</a>
+                <ul class="dropdown-menu">
+                  <li><a tabindex="-1" href="#" onclick="abrirPopup('panelBuscarTracking')">Recorrido actual</a></li>
+                  <li><a tabindex="-1" href="#" onclick="abrirPopup('panelBuscarTrackingFecha')">Recorrido Vehiculo por fecha</a></li>
+                </ul>
+              </li>
+              <li class="divider"></li>
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Vehiculo</a>
+                <ul class="dropdown-menu">
+                  <li><a tabindex="-1" href="#" onclick="$('#panelRegistrarNuevoVehiculo').modal('show')">Nuevo Vehiculo</a></li>
+                  <li><a tabindex="-1" href="#">Modificar Vehiculo</a></li>
+                  <li><a tabindex="-1" href="#">Borrar Vehiculo</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        <!--BUSCAR VEHICULO RECORRIDO ACTUAL TRACKING-->
+        <div style="">
+            <div id="panelBuscarTracking" class="panel-flotante">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Tracking</strong>
+                        <span class="pull-right clickable" onclick="cerrarPopup('panelBuscarTracking')"><button type="button" class="close">×</button></span>
+                    </div>
+                    <div class="panel-body">
+                        <form action="">
+                            <div class="form-group">
+                                <label for="placa">Placa: </label>
+                                <input type="text" class="form-control" name="placa"/>
+                            </div>
+                            <center><button type="submit" class="btn btn-primary">Buscar!</button></center>
+                        </form>
+                    </div>
+                 </div>
+            </div>
+            <!-----------------FIN------------------------->
+
+            <!--BUSCAR VEHICULO RECORRIDO POR FECHA TRACKING-->
+            <div id="panelBuscarTrackingFecha" class="panel-flotante">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Tracking</strong>
+                        <span class="pull-right clickable" onclick="cerrarPopup('panelBuscarTrackingFecha')"><button type="button" class="close">×</button></span>
+                    </div>
+                    <div class="panel-body">
+                        <form action="">
+                            <div class="form-group">
+                                <label for="placa">Placa: </label>
+                                <input type="text" class="form-control" name="placa"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha">Fecha: </label>
+                                <input type="date" class="form-control" name="fecha"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="horaInicial">Hora Inicial: </label>
+                                <input type="time" class="form-control" name="horaInicial"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="horaFinal">Hora Final: </label>
+                                <input type="time" class="form-control" name="horaFinal"/>
+                            </div>
+                            <center><button type="submit" class="btn btn-primary">Buscar!</button></center>
+                        </form>
+                    </div>
+                 </div>
+            </div>
+        </div>
+        <!-----------------FIN------------------------->
+        
+        
+          <div class="modal fade" id="panelRegistrarNuevoVehiculo" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Registrar nuevo Vehículo</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="placa">Placa: </label>
+                            <input type="text" class="form-control" name="placa"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="modelo">Modelo: </label>
+                            <input type="text" class="form-control" name="modelo"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="año">Año: </label>
+                            <input type="date" class="form-control" name="año"/>
+                        </div>                    
+                        <div class="form-group">
+                            <label for="color">Color: </label>
+                            <input type="text" class="form-control" name="color"/>
+                        </div>   
+                        <div class="form-group">
+                            <label for="comentarios">Comentarios: </label>
+                            <textarea class="form-control" name="comentarios"></textarea>
+                        </div>  
+                        <center><button type="submit" class="btn btn-primary">Registrar!</button></center>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        
+
+        <script>
+            cerrarAllPopup();
+        </script>
+    </body>
+</html>
