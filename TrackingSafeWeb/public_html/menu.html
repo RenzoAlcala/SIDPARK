@@ -10,19 +10,46 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
-            @media only screen and (min-width: 500px) {
-                .panel-flotante{
-                    width:30%;
-                    max-width: 400px;
+            @media only screen and (max-width: 700px) {
+                html{
+                    font-size: 13px;
                 }
                 
+                
+                .panel-flotante{
+                    margin-top:0px;
+                    max-width: 60%;
+                    min-width: 60%;
+                    /*max-width: 400px;*/
+                    margin-right: 0px;
+                    float:right;
+
+                }
+                
+                .sidenav {
+                    /*display:none;*/
+                    max-width: 30%;
+                    min-width: 30%;
+                    
+                }
+                
+                .sidenav a {
+                    overflow:auto;
+                }
+                
+                
             }
+            html{
+                font-size: 15px;
+            }
+            
             .panel-flotante{
                 z-index:1;
+                width:400px;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -42,16 +69,111 @@ and open the template in the editor.
                 left:10px;
                 
             }
+            
+            /*------------*/
             .dropdown-submenu{position:relative;}
             .dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
             .dropdown-submenu:hover>.dropdown-menu{display:block;}
             .dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
             .dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
             .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+            /*-------------*/
+            
+            .sidenav {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #222;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 20px;
+            }
+            
+            .sidenav header{
+                line-height:30px;
+                height:35px;
+                overflow:hidden;
+            }
+   
+
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+                
+                background: #252525;
+                border-top: 1px solid #373737;
+                border-bottom: 1px solid #1A1A1A;
+                
+                line-height:30px;
+                height:40px;
+                overflow:hidden;
+            }
+            .sidenav a:focus {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                color: white;
+                display: block;
+                transition: 0.3s;
+                
+                background-color:#255e84;
+                border-top: 1px solid #255e84;
+                border-bottom: 1px solid #255e84;
+            }
+
+             .offcanvas a:hover,.offcanvas a:focus{
+                color: white;
+                background-color:#255e84;
+                border-top: 1px solid #255e84;
+                border-bottom: 1px solid #255e84;
+            }
+
+            .sidenav .closebtn {
+                display:inline-block;
+                font-size: 30px;
+                padding: 0px 8px 0px;
+                margin-right: 0px;
+                float:right;
+                color:white;
+            }
+            .sidenav .closebtn:hover {
+                display:inline-block;
+                padding: 0px 8px 0px;
+                margin-left: 50px;
+                float:right;
+                color:#255e84;
+            }
+            
+            .sidenav nav ul{
+                list-style-type: none;
+                padding-left:0px;
+            }
+            
+            .sidenav nav ul li ul li{
+                list-style-type: none;
+                padding-left:10px;
+            }
+            
+
+            
         </style>
     </head>
     <body>
         <script>
+            function openNav() {
+                document.getElementById("menuPrincipal").style.display = "none";
+                document.getElementById("mySidenav").style.width = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("menuPrincipal").style.display = "block";
+                document.getElementById("mySidenav").style.width = "0";
+            }
             
             function cerrarPopup(nombre){
                 document.getElementById(nombre).style.display = "none";
@@ -75,13 +197,38 @@ and open the template in the editor.
                 });
               });*/
         </script>
+        <div id="mySidenav" class="sidenav">
+            <header style="line-height:40px;overflow:hidden">
+                <h4 style="color:white;margin-left:20px;display:inline-block">TrackingSafe</h4>
+                <span class="closebtn" onclick="closeNav()">&times;</span>
+            </header>
+            <nav>
+                <ul>
+                    <!--<li><a tabindex="1" href="javascript:void(0);">Link 1 Aa A a A aa<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>-->
+                    <li><a tabindex="2" href="javascript:void(0);" id="btn-1" data-toggle="collapse" data-target="#submenu1" aria-expanded="false">Tracking<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a>
+                        <ul class="collapse" id="submenu1" role="menu" aria-labelledby="btn-1">
+                            <li><a href="javascript:abrirPopup('panelBuscarTrackingFecha');">Tracking por fecha<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
+                            <li><a href="javascript:abrirPopup('panelBuscarTracking')">Tracking ahora<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                        </ul>
+                    </li>
+                    <li><a tabindex="3" href="#" id="btn-1" data-toggle="collapse" data-target="#submenu2" aria-expanded="false">Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a>
+                        <ul class="collapse" id="submenu2" role="menu" aria-labelledby="btn-1">
+                            <li><a href="#">Nuevo Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
+                            <li><a href="#">Modificar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                            <li><a href="#">Borrar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div onclick="openNav()">prueb</div>
                 <div id="mapa" style="z-index:-1;position:fixed;top:0px;left:0px;background-color:#cccccc;width:100%;height:100%"></div>
 
         <div id="menuPrincipal" class="btn-group" >
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button  onclick="openNav()" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
               </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style=" position: static; margin-bottom: 5px; *width: 180px;">
+            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style=" position: static; margin-bottom: 5px; *width: 180px;">
               <li class="dropdown-submenu">
                 <a tabindex="-1" href="#">Tracking</a>
                 <ul class="dropdown-menu">
@@ -98,7 +245,7 @@ and open the template in the editor.
                   <li><a tabindex="-1" href="#">Borrar Vehiculo</a></li>
                 </ul>
               </li>
-            </ul>
+            </ul>-->
           </div>
         <!--BUSCAR VEHICULO RECORRIDO ACTUAL TRACKING-->
         <div style="">
