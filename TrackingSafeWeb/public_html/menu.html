@@ -14,6 +14,12 @@ and open the template in the editor.
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-size: 15px;                
+              }
             @media only screen and (max-width: 700px) {
                 html{
                     font-size: 13px;
@@ -43,10 +49,6 @@ and open the template in the editor.
                 
                 
             }
-            html{
-                font-size: 15px;
-            }
-            
             .panel-flotante{
                 z-index:1;
                 width:400px;
@@ -65,6 +67,7 @@ and open the template in the editor.
             }*/
             
             #menuPrincipal{
+                position: absolute;
                 top:10px;
                 left:10px;
                 
@@ -207,22 +210,22 @@ and open the template in the editor.
                     <!--<li><a tabindex="1" href="javascript:void(0);">Link 1 Aa A a A aa<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>-->
                     <li><a tabindex="2" href="javascript:void(0);" id="btn-1" data-toggle="collapse" data-target="#submenu1" aria-expanded="false">Tracking<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a>
                         <ul class="collapse" id="submenu1" role="menu" aria-labelledby="btn-1">
-                            <li><a href="javascript:abrirPopup('panelBuscarTrackingFecha');">Tracking por fecha<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
-                            <li><a href="javascript:abrirPopup('panelBuscarTracking')">Tracking ahora<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                            <li><a href="javascript:$('#panelBuscarTrackingFecha').modal('show');">Tracking por fecha<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
+                            <li><a href="javascript:$('#panelBuscarTracking').modal('show')">Tracking ahora<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
                         </ul>
                     </li>
                     <li><a tabindex="3" href="#" id="btn-1" data-toggle="collapse" data-target="#submenu2" aria-expanded="false">Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a>
                         <ul class="collapse" id="submenu2" role="menu" aria-labelledby="btn-1">
-                            <li><a href="#">Nuevo Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
-                            <li><a href="#">Modificar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
-                            <li><a href="#">Borrar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                            <li><a href="javascript:$('#panelRegistrarNuevoVehiculo').modal('show')">Nuevo Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link "></span></a></li>
+                            <li><a href="javascript:$('#panelModificarNuevoVehiculo').modal('show')">Modificar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
+                            <li><a href="javascript:$('#panelListarVehiculos').modal('show')">Borrar Vehículo<span style="float:right;" class="push-right sub_icon glyphicon glyphicon-link"></span></a></li>
                         </ul>
                     </li>
                 </ul>
             </nav>
         </div>
-        <div onclick="openNav()">prueb</div>
-                <div id="mapa" style="z-index:-1;position:fixed;top:0px;left:0px;background-color:#cccccc;width:100%;height:100%"></div>
+        <!--<div id="map" style="z-index:-1;position:fixed;top:0px;left:0px;background-color:#cccccc;width:100%;height:100%"></div>-->
+        <div id="map" style="width:100%;height:100%"></div>
 
         <div id="menuPrincipal" class="btn-group" >
             <button  onclick="openNav()" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -248,14 +251,18 @@ and open the template in the editor.
             </ul>-->
           </div>
         <!--BUSCAR VEHICULO RECORRIDO ACTUAL TRACKING-->
-        <div style="">
-            <div id="panelBuscarTracking" class="panel-flotante">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong>Tracking</strong>
-                        <span class="pull-right clickable" onclick="cerrarPopup('panelBuscarTracking')"><button type="button" class="close">×</button></span>
-                    </div>
-                    <div class="panel-body">
+        
+            
+            <div class="modal fade" id="panelBuscarTracking" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Tracking Actual</h4>
+                </div>
+                <div class="modal-body">
                         <form action="">
                             <div class="form-group">
                                 <label for="placa">Placa: </label>
@@ -263,20 +270,29 @@ and open the template in the editor.
                             </div>
                             <center><button type="submit" class="btn btn-primary">Buscar!</button></center>
                         </form>
-                    </div>
-                 </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
             </div>
+          </div>
+        
             <!-----------------FIN------------------------->
 
             <!--BUSCAR VEHICULO RECORRIDO POR FECHA TRACKING-->
-            <div id="panelBuscarTrackingFecha" class="panel-flotante">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong>Tracking</strong>
-                        <span class="pull-right clickable" onclick="cerrarPopup('panelBuscarTrackingFecha')"><button type="button" class="close">×</button></span>
-                    </div>
-                    <div class="panel-body">
-                        <form action="">
+        <div class="modal fade" id="panelBuscarTrackingFecha" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Tracking por fecha</h4>
+                </div>
+                <div class="modal-body">
+                                            <form action="">
                             <div class="form-group">
                                 <label for="placa">Placa: </label>
                                 <input type="text" class="form-control" name="placa"/>
@@ -295,10 +311,15 @@ and open the template in the editor.
                             </div>
                             <center><button type="submit" class="btn btn-primary">Buscar!</button></center>
                         </form>
-                    </div>
-                 </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
             </div>
-        </div>
+          </div>
+        
         <!-----------------FIN------------------------->
         
         
@@ -344,9 +365,103 @@ and open the template in the editor.
             </div>
           </div>
         
+        <div class="modal fade" id="panelModificarNuevoVehiculo" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Registrar nuevo Vehículo</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="placa">Placa: </label>
+                            <input disabled type="text" value="AVQ057" class="form-control" name="placa"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="modelo">Modelo: </label>
+                            <input type="text" class="form-control" name="modelo"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="año">Año: </label>
+                            <input type="date" class="form-control" name="año"/>
+                        </div>                    
+                        <div class="form-group">
+                            <label for="color">Color: </label>
+                            <input type="text" class="form-control" name="color"/>
+                        </div>   
+                        <div class="form-group">
+                            <label for="comentarios">Comentarios: </label>
+                            <textarea class="form-control" name="comentarios"></textarea>
+                        </div>  
+                        <center><button type="submit" class="btn btn-primary">Registrar!</button></center>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        
+        <div class="modal fade" id="panelListarVehiculos" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Lista de Vehículos</h4>
+                </div>
+                <div class="modal-body">
+                    Presionar en el símbolo X para eliminar la información del vehículo:
+                    <form action="">
+                        <div style="width:100%" class="btn-group" role="group" aria-label="...">
+                            <button style="text-align: left;width:90%" type="button" class="btn btn-primary">AVQ057</button>
+                            <button style="width:10%" type="button" class="btn btn-danger">&times;</button>
+                        </div>
+                        <div style="width:100%" class="btn-group" role="group" aria-label="...">
+                            <button style="text-align: left;width:90%" type="button" class="btn btn-primary">BVT112</button>
+                            <button style="width:10%" type="button" class="btn btn-danger">&times;</button>
+                        </div>
+                        <div style="width:100%" class="btn-group" role="group" aria-label="...">
+                            <button style="text-align: left;width:90%" type="button" class="btn btn-primary">HYR021</button>
+                            <button style="width:10%" type="button" class="btn btn-danger">&times;</button>
+                        </div>
+                        <div style="width:100%" class="btn-group" role="group" aria-label="...">
+                            <button style="text-align: left;width:90%" type="button" class="btn btn-primary">XRE435</button>
+                            <button style="width:10%" type="button" class="btn btn-danger">&times;</button>
+                        </div>
+                        <div style="width:100%" class="btn-group" role="group" aria-label="...">
+                            <button style="text-align: left;width:90%" type="button" class="btn btn-primary">WTU442</button>
+                            <button style="width:10%" type="button" class="btn btn-danger">&times;</button>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
 
         <script>
             cerrarAllPopup();
+            function initMap() {
+                // Create a map object and specify the DOM element for display.
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  center: {lat: -12.0240527, lng: -77.112036},
+                  scrollwheel: false,
+                  disableDefaultUI: true,
+                  zoom: 16
+                });
+            }
         </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXu_uEc4rIAU3htfyI5-xBY29Gfsg_a4o&amp;callback=initMap"></script>
     </body>
 </html>
