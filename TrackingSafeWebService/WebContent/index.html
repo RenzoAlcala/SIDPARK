@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+123
+</body>
+<script src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBngpTU0HXhu0PtVWmyXkzxlmpCEY-AGtA",
+    authDomain: "trackingsafe-d9764.firebaseapp.com",
+    databaseURL: "https://trackingsafe-d9764.firebaseio.com",
+    projectId: "trackingsafe-d9764",
+    storageBucket: "trackingsafe-d9764.appspot.com",
+    messagingSenderId: "562167345575"
+  };
+  firebase.initializeApp(config);
+  
+  var starCountRef = firebase.database().ref('vehiculos/AAA-111');
+  starCountRef.on('value', function(snapshot) {
+    alert('ayuda');
+  });
+  
+  </script>
+</html>
